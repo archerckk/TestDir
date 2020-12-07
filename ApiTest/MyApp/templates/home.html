@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>测试平台</title>
+    <style>
+        body {
+            background: url("/static/home.jpg");
+            background-attachment: fixed;
+            background-size: cover;
+        }
+    </style>
+    <!--背景图充满屏幕，随浏览器实时变化的标准写法-->
+
+</head>
+<body style="text-align: center">
+
+<div style="text-align: center">
+    <h1>欢迎使用 {{ username }}接口测试平台</h1>
+    <h3>welcome to ApiTest</h3>
+
+    {# 这里放传送门 #}
+    <div style="color: white;text-align: left;margin-left: 300px">
+        <h3>欢迎使用传送门：</h3>
+        <strong>
+           {% for i in hrefs %}
+               <a href="{{ i.href }}">{{ i.name }}</a>
+            {% endfor %}
+        </strong>
+
+    </div>
+
+
+
+    <div style="position: absolute;bottom: 5px;right: 5px">
+        <textarea id="diss_input" cols="50" rows="10" placeholder="吐槽专用，点击 diss 按钮即可怒喷开发者"></textarea>
+        <br>
+        <button style="border-radius: 0px 0px 50px 50px;width: 100px" onclick="diss()">diss ！</button>
+    {#    <img src="/static/201908059658/小风馋月.png" alt="logo" style="width:400px;" >#}
+    </div>
+</div>
+<script>
+    function diss() {
+        $.get("/diss/", {
+            "diss_text": document.getElementById('diss_input').value,
+        }, function (ret) {
+            if (ret != "空") {
+                alert('已经吐槽成功')
+            } else {
+                alert('请输入吐槽内容！')
+            }
+        })
+
+    }
+</script>
+</body>
+</html>
