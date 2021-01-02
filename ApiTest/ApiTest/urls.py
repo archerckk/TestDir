@@ -29,5 +29,10 @@ urlpatterns = [
     url(r"^accounts/login/$",login),#未登录跳转注册
     url(r"^logout/$",logout),#退出登录
     url(r"^diss/$",diss),#退出登录
-    url(r"^help/$",api_help)#进入帮助文档
+    url(r"^help/$",api_help),#进入帮助文档
+    url(r"^project_list/$",project_list),#项目列表
+    url(r"^delete_project/$",delete_project),#删除项目
+    url(r"^add_project/$",add_project),#新增项目
+    url(r"^apis/(?P<id>.*)/$",open_apis),#进入接口库
+
 ]

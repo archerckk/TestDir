@@ -15,7 +15,14 @@ def child_json(eid):
     res={}
     if eid == 'home.html':
         date = DB_home_href.objects.all()
+        # projects=DB_project.objects.all()
+        # res = {'hrefs': date,'projects':projects}
         res = {'hrefs': date}
+    elif eid == 'project_list.html':
+        date=DB_project.objects.all()
+        res = {'hrefs': date,'projects':date}
+
+
 
     return res
 
@@ -87,3 +94,29 @@ def diss(request):
 
 def api_help(request):
     return render(request, 'welcome.html', {"whichHTML": "help.html", "oid": ""})
+
+def project_list(request):
+    return render(request, 'welcome.html', {"whichHTML": "project_list.html", "oid": ""})
+
+def delete_project(request):
+    id=request.GET['id']
+
+    DB_project.objects.filter(id=id).delete()
+    return HttpResponse('')
+
+def add_project(request):
+    project_name=request.GET['project_name']
+    DB_project.objects.create(name=project_name,remark='',user=request.user.username,other_user='')
+    return HttpResponse('')
+
+def open_apis(request,id):
+    project_id=id
+    return render(request, 'welcome.html', {"whichHTML": "P_apis.html", "oid": ""})
+
+def open_cases(request,id):
+    project_id=id
+    return render(request, 'welcome.html', {"whichHTML": "P_cases.html", "oid": ""})
+
+def open_project_set(request,id):
+    project_id=id
+    return render(request, 'welcome.html', {"whichHTML": "P_project_set.html", "oid": ""})
