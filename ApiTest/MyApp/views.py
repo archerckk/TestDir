@@ -11,7 +11,7 @@ def welcome(request):
     return render(request, "home.html")
 
 #控制不同页面返回不同的数据：数据分发器
-def child_json(eid):
+def child_json(eid,oid=''):
     res={}
     if eid == 'home.html':
         date = DB_home_href.objects.all()
@@ -22,14 +22,16 @@ def child_json(eid):
         date=DB_project.objects.all()
         res = {'hrefs': date,'projects':date}
 
-
+    elif eid=='P_apis.html':
+        project_name = DB_project.objects.filter(id=oid)[0].name
+        res={'project_name':project_name}
 
     return res
 
 
 # 返回子页面
 def child(request, eid, oid):
-    res = child_json(eid)
+    res = child_json(eid,oid)
     return render(request, eid, res)
 
 
@@ -111,7 +113,7 @@ def add_project(request):
 
 def open_apis(request,id):
     project_id=id
-    return render(request, 'welcome.html', {"whichHTML": "P_apis.html", "oid": ""})
+    return render(request, 'welcome.html', {"whichHTML": "P_apis.html", "oid": project_id})
 
 def open_cases(request,id):
     project_id=id
