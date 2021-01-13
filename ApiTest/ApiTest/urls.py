@@ -34,5 +34,7 @@ urlpatterns = [
     url(r"^delete_project/$",delete_project),#删除项目
     url(r"^add_project/$",add_project),#新增项目
     url(r"^apis/(?P<id>.*)/$",open_apis),#进入接口库
+    url(r"^cases/(?P<id>.*)/$",open_cases),#进入用例设置
+    url(r"^project_set/(?P<id>.*)/$",open_project_set),#进入项目设置
 
 ]

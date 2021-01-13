@@ -23,8 +23,16 @@ def child_json(eid,oid=''):
         res = {'hrefs': date,'projects':date}
 
     elif eid=='P_apis.html':
-        project_name = DB_project.objects.filter(id=oid)[0].name
-        res={'project_name':project_name}
+        project = DB_project.objects.filter(id=oid)[0]
+        res={'project':project}
+
+    elif eid == 'P_cases.html':
+        project = DB_project.objects.filter(id=oid)[0]
+        res = {'project': project}
+
+    elif eid == 'P_project_set.html':
+        project = DB_project.objects.filter(id=oid)[0]
+        res = {'project': project}
 
     return res
 
@@ -117,8 +125,8 @@ def open_apis(request,id):
 
 def open_cases(request,id):
     project_id=id
-    return render(request, 'welcome.html', {"whichHTML": "P_cases.html", "oid": ""})
+    return render(request, 'welcome.html', {"whichHTML": "P_cases.html", "oid": project_id})
 
 def open_project_set(request,id):
     project_id=id
-    return render(request, 'welcome.html', {"whichHTML": "P_project_set.html", "oid": ""})
+    return render(request, 'welcome.html', {"whichHTML": "P_project_set.html", "oid": project_id})
