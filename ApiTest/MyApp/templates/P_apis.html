@@ -3,44 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .wqrf_button {
+            background: linear-gradient(to top, #daffff, white);
+            border-radius: 5px;
+            border: 1px solid #343c48;
+            box-shadow: 4px 4px 4px grey;
+        }
+    </style>
+
 </head>
 <body>
 
-<nav class="navbar navbar-default" role="navigation" style="position: absolute;top: 0px;left: 80px;width:-webkit-calc(100% - 200px);z-index: 1">
+<nav class="navbar navbar-default" role="navigation"
+     style="position: absolute;top: 0px;left: 80px;width:-webkit-calc(100% - 200px);z-index: 1">
     <div class="container-fluid">
-    <div class="navbar-header">
-        <span style="font-size: xx-small" class="navbar-brand" >项目名称：{{ project.name }}</span>
-        <a class="navbar-brand" href="/project_list/">返回项目列表</a>
-    </div>
-    <div>
-        <ul class="nav navbar-nav">
-            <li class="active"><a href="/apis/{{ project.id }}/">接口库</a></li>
-            <li><a href="/cases/{{ project.id }}/">用例库</a></li>
-            <li><a href="/project_set/{{ project.id }}/">项目设置</a></li>
-        </ul>
-    </div>
+        <div class="navbar-header">
+            <span style="font-size: xx-small" class="navbar-brand">项目名称：{{ project.name }}</span>
+            <a class="navbar-brand" href="/project_list/">返回项目列表</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/apis/{{ project.id }}/">接口库</a></li>
+                <li><a href="/cases/{{ project.id }}/">用例库</a></li>
+                <li><a href="/project_set/{{ project.id }}/">项目设置</a></li>
+            </ul>
+        </div>
     </div>
 </nav>
-{#<div style="text-align: center">#}
-{#    <h2>接口库 ：<span style="color: #ff607c">{{ project_name }}</span> </h2>#}
-{#</div>#}
+<!--{#-->
+<div style="text-align: center">#}
+    {# <h2>接口库 ：<span style="color: #ff607c">{{ project_name }}</span></h2>#}
+    {#
+</div>
+<!--#}-->
 
 <br><br>
 <table class="table table-striped">
     <thead>
-        <tr>
-            <th>id</th> <th style="width: 50%">接口名称</th> <th style="width: 30%">url</th> <th>操作</th>
-        </tr>
+    <tr>
+        <th>id</th>
+        <th style="width: 40%">接口名称</th>
+        <th style="width: 20%">url</th>
+        <th style="width: 350px">操作</th>
+    </tr>
     </thead>
     <tbody>
-         {% for i in apis %}
-             <tr>
-                <td>{{ i.id }}</td><td>{{ i.name }}</td> <td>{{ i.api_url }}</td>  <td>
-                 <button onclick="" class="btn btn-success">调试</button> <button onclick="" class="btn btn-danger">删除</button></td>
-            </tr>
-        {% endfor %}
+    {% for i in apis %}
+    <tr>
+        <td>{{ i.id }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.api_url }}</td>
+        <td>
+            <button onclick="" class="btn btn-success">调试</button>
+            <button onclick="open_bz('{{i.id}}')" class="wqrf_button">备注</button>
+            <button class="wqrf_button">复制</button>
+            <button class="wqrf_button">异常值侧测试</button>
+            <button onclick="document.location.href='/project_api_del/{{ i.id }}/'" class="btn btn-danger">删除</button>
+        </td>
+    </tr>
+    {% endfor %}
     </tbody>
 </table>
+
+<div style="position: fixed;bottom: 0px; width: 100%;background-color: #f8f8f8;text-align: center;border: 1px solid #e7e7e7">
+    <div class="btn-group">
+        <button type="button" class="btn btn-default"
+                onclick="document.location.href='/project_api_add/{{ project.id }}/'"
+        >新增接口
+        </button>
+        <button type="button" class="btn btn-default">全局请求头</button>
+        <button type="button" class="btn btn-default">全局域名</button>
+        <button type="button" class="btn btn-default">接口文档导入</button>
+        <button type="button" class="btn btn-default">抓包导入</button>
+        <button type="button" class="btn btn-default">加密算法</button>
+        <button type="button" class="btn btn-default">登录态接口</button>
+
+    </div>
+
+
+</div>
+
+<!--备注窗口-->
+<div id="bz" style="display:none;width: 50%;height: 30%;position: fixed;left:25%;top:35%;background-color: #3c4043;box-shadow: 4px 4px 8px grey">
+    <input id="which_api" type="text" style="display: none">
+    <textarea name="" id="bz_value" style="width: 100%;height: 80%" placeholder="请输入该接口备注"></textarea>
+    <button onclick="save_bz()" style="width:49.9%;height:20%">保存</button>
+    <button onclick="close_bz()" style="width:49.3%;height:20%">取消</button>
+</div>
+
+<script>
+    function open_bz(id) {
+        document.getElementById('bz_value').value = '';//这是清空上一个接口的内容
+        $.get('/get_bz/', {
+            'api_id': id
+        }, function (ret) {
+            document.getElementById('bz').style.display = 'block';
+            document.getElementById('which_api').value = id;
+            document.getElementById('bz_value').value = ret;
+        })
+
+    }
+
+    //
+    function save_bz() {
+        id = document.getElementById('which_api').value;
+        bz_value = document.getElementById('bz_value').value;
+        $.get('/save_bz/', {
+            'api_id': id,
+            'bz_value': bz_value
+        }, function (ret) {
+            document.getElementById('bz').style.display = 'none';
+        })
+
+    }
+
+    //关闭窗口
+    function close_bz() {
+        document.getElementById('bz').style.display = 'none';
+    }
+</script>
 
 </body>
 </html>
