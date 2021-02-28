@@ -14,12 +14,12 @@
     </style>
 </head>
 <body>
-    <div style="padding-left: 20px;margin-top: 20px" >
-        <a href="javascript:show_help('1')">项目列表</a><br><br>
-        <a href="javascript:show_help('2')">接口库</a><br><br>
-        <a href="javascript:show_help('3')">接口调试</a><br><br>
-        <a href="javascript:show_help('4')">后台</a><br><br>
-        <a href="javascript:show_help('5')">账户</a><br><br>
+    <div style="padding-left: 20px;margin-top: 20px;color: #0fd1ab" >
+        <a href="javascript:show_help('1')" style="color: indianred">项目列表</a><br><br>
+        <a href="javascript:show_help('2')" style="color: indianred">接口库</a><br><br>
+        <a href="javascript:show_help('3')" style="color: indianred">接口调试</a><br><br>
+        <a href="javascript:show_help('4')" style="color: indianred">后台</a><br><br>
+        <a href="javascript:show_help('5')" style="color: indianred">账户</a><br><br>
     </div>
 
     <div style="width: 3px;height: 500px;background:linear-gradient(to top,red,green);position: absolute;left: 150px;top:10px;">
@@ -74,14 +74,14 @@
 
 <script>
     function show_help(which_id) {
-        {# 先把所有的文案都隐藏 #}
+        // {# 先把所有的文案都隐藏 #}
         document.getElementById('help_1').style.display='none';
         document.getElementById('help_2').style.display='none';
         document.getElementById('help_3').style.display='none';
         document.getElementById('help_4').style.display='none';
         document.getElementById('help_5').style.display='none';
 
-        {# 把which_id的span文案显示出来 #}
+        // {# 把which_id的span文案显示出来 #}
         document.getElementById('help_'+which_id).style.display='block';
     }
 </script>

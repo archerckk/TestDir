@@ -41,5 +41,6 @@ urlpatterns = [
     url(r"^project_api_del/(?P<id>.*)/$",project_api_del),#删除接口
     url(r"^save_bz/$", save_bz),#保存备注
     url(r"^get_bz/$", get_bz), # 获取备注
+    url(r"Api_save/$",Api_save)
 
 ]

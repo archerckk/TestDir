@@ -109,10 +109,12 @@ def api_help(request):
 def project_list(request):
     return render(request, 'welcome.html', {"whichHTML": "project_list.html", "oid": ""})
 
+# 删除项目
 def delete_project(request):
     id=request.GET['id']
 
     DB_project.objects.filter(id=id).delete()
+    DB_apis.objects.filter(project_id=id).delete()
     return HttpResponse('')
 
 def add_project(request):
@@ -166,3 +168,26 @@ def get_bz(request):
     api_id=request.GET['api_id']
     bz_value=DB_apis.objects.filter(id=api_id)[0].des
     return HttpResponse(bz_value)
+
+
+# 保存接口
+def Api_save(request):
+    # 提取所有数据
+    api_id = request.GET['api_id']
+    ts_method = request.GET['ts_method']
+    ts_url = request.GET['ts_url']
+    ts_host = request.GET['ts_host']
+    ts_header = request.GET['ts_header']
+    ts_body_method = request.GET['ts_body_method']
+    ts_api_body = request.GET['ts_api_body']
+    # 保存数据
+    DB_apis.objects.filter(id=api_id).update(
+        api_method = ts_method,
+        api_url = ts_url,
+        api_header = ts_header,
+        api_host = ts_host,
+        body_method = ts_body_method,
+        api_body = ts_api_body
+    )
+    # 返回
+    return HttpResponse('success')

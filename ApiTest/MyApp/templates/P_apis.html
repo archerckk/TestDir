@@ -50,19 +50,19 @@
     </thead>
     <tbody>
     {% for i in apis %}
-        <tr>
-            <td>{{ i.id }}</td>
-            <td>{{ i.name }}</td>
-            <td>{{ i.api_url }}</td>
-            <td>
-                <button onclick="" class="btn btn-success">调试</button>
-                <button onclick="open_bz('{{ i.id }}')" class="wqrf_button">备注</button>
-                <button class="wqrf_button">复制</button>
-                <button class="wqrf_button">异常值侧测试</button>
-                <button onclick="document.location.href='/project_api_del/{{ i.id }}/'" class="btn btn-danger">删除
-                </button>
-            </td>
-        </tr>
+    <tr>
+        <td>{{ i.id }}</td>
+        <td>{{ i.name }}</td>
+        <td>{{ i.api_url }}</td>
+        <td>
+            <button onclick="ts_show('{{i.id}}','{{i.name}}')" class="btn btn-success">调试</button>
+            <button onclick="open_bz('{{ i.id }}')" class="wqrf_button">备注</button>
+            <button class="wqrf_button">复制</button>
+            <button class="wqrf_button">异常值侧测试</button>
+            <button onclick="document.location.href='/project_api_del/{{ i.id }}/'" class="btn btn-danger">删除
+            </button>
+        </td>
+    </tr>
     {% endfor %}
     </tbody>
 </table>
@@ -128,13 +128,14 @@
 
 
 {#请求体的弹窗div#}
-<div id="ts"  style=" display:none;border-radius:5px;width:80%;position: fixed;left: 10%;top: 10%;background-color: #3c4043;
+<div id="ts" style=" display:none;border-radius:5px;width:80%;position: fixed;left: 10%;top: 10%;background-color: #3c4043;
 box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
     <div class="btn-group" style="float:right">
         <button onclick="ts_save()" type="button" class="btn btn-success">保存</button>
         <button onclick="ts_close()" type="button" class="btn btn-default">取消</button>
     </div>
-    <h3>接口：<small id="ts_api_id"></small> <small id="ts_api_name"></small></h3>
+    <h3>接口：<small id="ts_api_id" style="color: greenyellow"></small>-<small id="ts_api_name"
+                                                                            style="color: greenyellow"></small></h3>
 
     <ul class="nav navbar-nav" style="width: 98%">
 
@@ -187,7 +188,7 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
     <br><br><br>
 
     <ul id="myTab" class="nav nav-tabs">
-        <li class="active"><a href="#none" data-toggle="tab">none</a></li>
+        <li class="active"><a id="click_none" href="#none" data-toggle="tab">none</a></li>
         <li><a href="#form-data" data-toggle="tab">form-data</a></li>
         <li><a href="#x-www-form-urlencoded" data-toggle="tab">x-www-form-urlencoded</a></li>
         <li class="dropdown">
@@ -219,14 +220,10 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
                         <td style="width: 50%">Value</td>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="mytbody">
                     <tr>
-                        <td>Username</td>
-                        <td>wqrf</td>
-                    </tr>
-                    <tr>
-                        <td>Password</td>
-                        <td>123456</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>
@@ -249,14 +246,10 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
                         <td style="width: 50%">Value</td>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="mytbody2">
                     <tr>
-                        <td>Username</td>
-                        <td>wqrf</td>
-                    </tr>
-                    <tr>
-                        <td>Password</td>
-                        <td>123456</td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>
@@ -287,7 +280,7 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
         </div>
 
         <div class="tab-pane fade" id="response">
-            <textarea name="" id="" disabled="disabled" style="color: black;width: 98%;height: 300px"></textarea>
+            <textarea name="" id="ts_response_body" disabled="disabled" style="color: black;width: 98%;height: 300px"></textarea>
 
         </div>
     </div>
@@ -296,12 +289,45 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
     <br>
 </div>
 <script>
-    function ts_show() {
-        document.getElementById('ts').style.display='block';
-        document.getElementById()
+
+    function clear_ts_api() {
+        document.getElementById('ts_api_id').innerText = '';
+        document.getElementById('ts_api_name').innerText = '';
+        document.getElementById('ts_method').vaule = 'none';
+        document.getElementById('ts_url').vaule = '';
+        document.getElementById('ts_host').vaule = '';
+        document.getElementById('ts_header').vaule = '{}';
+        //开始初始化请求体编码格式部分：
+
+        document.getElementById('click_none').click(); //点击none子标签
+        document.getElementById('mytbody').innerHTML = '<tr><td></td><td></td></tr>';
+        document.getElementById('mytbody2').innerHTML = '<tr><td></td><td></td></tr>';
+        document.getElementById('raw_Text').value = '';
+        document.getElementById('raw_JavaScript').value = '';
+        document.getElementById('raw_Json').value = '';
+        document.getElementById('raw_Html').value = '';
+        document.getElementById('raw_Xml').value = '';
+        // 返回体清空
+        document.getElementById('ts_response_body').value= '';
+
+        // 运行第三方表格插件的函数
+        $('#mytable').SetEditable({
+            $addButton: $('#add'),
+        });
+
+          $('#mytable2').SetEditable({
+            $addButton: $('#add2'),
+        });
     }
-    
-    
+
+    function ts_show(id, name) {
+        clear_ts_api();
+        document.getElementById('ts').style.display = 'block';
+        document.getElementById("ts_api_id").innerText = id;
+        document.getElementById("ts_api_name").innerText = name;
+    }
+
+
     function ts_close() {
         document.getElementById('ts').style.display = 'none';
     }
@@ -312,8 +338,7 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
         var ts_host = document.getElementById('ts_url').value;
         var ts_header = document.getElementById('ts_header').value;
         var ts_body_method = $('ul#myTab li[class="active"]')[0].innerText;
-        alert(ts_body_method)
-        {#console.log(ts_method+ts_url+ts_host+ts_header)#}
+
 
         if (ts_body_method == 'none') {
             var ts_api_body = ''
@@ -329,11 +354,12 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
                 var value = tdarr[1].innerText; // 获取value
                 ts_api_body.push([key, value]);// 作为一个数组，存放到这个大数组里。
             }
+            ts_api_body = JSON.stringify(ts_api_body)
             console.log(ts_api_body)
 
         }
         if (ts_body_method == 'none') {
-                        var ts_api_body = []; //新建这个空列表用来存放后续的数据
+            var ts_api_body = []; //新建这个空列表用来存放后续的数据
             var tbody_ = $("table#mytable2 tbody")[0]; //获取该表格的内容部分
             var trlist = tbody_.children; //获取下面所有tr，每个tr就是一个键值对实际上
             for (var i = 0; i < trlist.length; i++) {
@@ -342,6 +368,8 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
                 var value = tdarr[1].innerText; // 获取value
                 ts_api_body.push([key, value]);// 作为一个数组，存放到这个大数组里。
             }
+            ts_api_body = JSON.stringify(ts_api_body)
+
             console.log(ts_api_body)
 
         }
@@ -365,6 +393,19 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
             document.getElementById('raw_Xml').value;
 
         }
+        var api_id = document.getElementById('ts_api_id').innerText;//获取接口的id
+
+        $.get('/Api_save/', {
+            'api_id': api_id,
+            'ts_method': ts_method,
+            'ts_url': ts_url,
+            'ts_host': ts_host,
+            'ts_header': ts_header,
+            'ts_body_method': ts_body_method,
+            'ts_api_body': ts_api_body
+        }, function (ret) {
+            document.getElementById('ts').style.display = 'none';
+        })
     }
 </script>
 
