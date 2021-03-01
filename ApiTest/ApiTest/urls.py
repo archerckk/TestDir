@@ -43,5 +43,6 @@ urlpatterns = [
     url(r"^get_bz/$", get_bz), # 获取备注
     url(r"^Api_save/$",Api_save),
     url(r"^get_api_data/$",get_api_data),
+    url(r"^Api_send/$",Api_send),
 
 ]
