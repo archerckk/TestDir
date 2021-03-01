@@ -3,7 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from MyApp.models import *
 import json
-
+import requests
 
 # Create your views here.
 
@@ -216,6 +216,7 @@ def Api_save(request):
         api_body=ts_api_body,
         name=api_name
     )
+    # print(DB_apis.objects.filter(id=api_id).all()[1])
     # 返回
     return HttpResponse('success')
 
@@ -253,6 +254,55 @@ def Api_send(request):
     # ts_api_body = request.GET['ts_api_body']
 
     # 发送请求获取返回值
+    header= json.loads(ts_header) # 处理header
+
+    # 拼接完整url
+    if ts_host[-1]=='/' and ts_url[0]=='/': #都有/
+        url=ts_host[:-1]+ts_url
+    elif ts_host[-1] !='/' and ts_url[0] !='/': # 都没有/
+        url=ts_host+'/'+ts_url
+    else: # 肯定有一个有/
+        url=ts_host+ts_url
+    if ts_body_method== 'none':
+        response=requests.request(ts_body_method.upper(),url,headers=header,data={})
+
+    elif ts_body_method=='form-data':
+        files=[]
+        payload={}
+
+        for i in eval(ts_api_body):
+            payload[i[0]]=i[1]
+
+        response= requests.request(ts_body_method.upper(),url,headers=header,files=files)
+
+
+    elif ts_body_method=='x-www-form-urlencoded':
+        header['Content-Type']='application/x-www-form-urlencoded'
+        payload = {}
+
+        for i in eval(ts_api_body):
+            payload[i[0]] = i[1]
+
+        response = requests.request(ts_body_method.upper(), url, headers=header, data=payload)
+
+    else:
+        if ts_body_method=='Text':
+            header['Content-Type'] = 'text/plain'
+
+        if ts_body_method=='JavaScript':
+            header['Content-Type'] = 'text/plain'
+
+        if ts_body_method == 'Json':
+            header['Content-Type'] = 'text/plain'
+
+        if ts_body_method == 'Html':
+            header['Content-Type'] = 'text/plain'
+
+        if ts_body_method == 'Xml':
+            header['Content-Type'] = 'text/plain'
+
+        response=requests.request(ts_body_method.upper(),url,headers=header,data=ts_api_body.encode('utf-8'))
+
 
     # 把返回值传递给前端页面
-    return HttpResponse('{"code":200}')
+    return HttpResponse(response.text)
