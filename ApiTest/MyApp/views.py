@@ -2,9 +2,12 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from MyApp.models import *
+import json
 
 
 # Create your views here.
+
+
 @login_required
 def welcome(request):
     print('进来了')
@@ -180,6 +183,8 @@ def Api_save(request):
     ts_header = request.GET['ts_header']
     ts_body_method = request.GET['ts_body_method']
     ts_api_body = request.GET['ts_api_body']
+
+    api_name=request.GET['api_name']
     # 保存数据
     DB_apis.objects.filter(id=api_id).update(
         api_method = ts_method,
@@ -187,7 +192,13 @@ def Api_save(request):
         api_header = ts_header,
         api_host = ts_host,
         body_method = ts_body_method,
-        api_body = ts_api_body
+        api_body = ts_api_body,
+        name= api_name
     )
     # 返回
     return HttpResponse('success')
+
+def get_api_data(request):
+    api_id= request.GET['api_id']
+    api=DB_apis.objects.filter(id=api_id).values()[0]
+    return HttpResponse(json.dumps(api),content_type='application/json')
