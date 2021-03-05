@@ -55,12 +55,14 @@
         <td>{{ i.name }}</td>
         <td>{{ i.api_url }}</td>
         <td>
+            <div class="btn-group" style="z-index: 0">
             <button onclick="ts_show('{{i.id}}','{{i.name}}')" class="btn btn-success">调试</button>
             <button onclick="open_bz('{{ i.id }}')" class="btn btn-default">备注</button>
             <button class="btn btn-default">复制</button>
             <button class="btn btn-default">异常值侧测试</button>
             <button onclick="document.location.href='/project_api_del/{{ i.id }}/'" class="btn btn-danger">删除
             </button>
+            </div>
         </td>
     </tr>
     {% endfor %}
@@ -393,6 +395,7 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
     }
 
     function ts_save() {
+        // 获取所有接口设置数据
         var api_name = document.getElementById('ts_api_name').value;//获取接口的id
 
         var ts_method = document.getElementById('ts_method').value;
@@ -400,6 +403,29 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
         var ts_host = document.getElementById('ts_host').value;
         var ts_header = document.getElementById('ts_header').value;
         var ts_body_method = $('ul#myTab li[class="active"]')[0].innerText;
+
+        // 判断顶部的数据是否填充完
+        if(api_name == ''){alert('请输入接口名字！');return}
+        if(ts_method == 'none'){alert('请选择请求方式！');return}
+        if(ts_url == ''){alert('请输入url！');return}
+        if(ts_host == ''){alert('请输入host！');return}
+
+
+        //判断关键数据是否符合规则
+        if(ts_host.slice(0,7) != 'http://' &&ts_host.slice(0,8)!='https://'){
+            alert('host必须以http://或https://开头！');return
+        }
+
+
+       //判断请求头是否为json格式
+            if(ts_header != ''){
+          try {
+              JSON.parse(ts_header)
+          }catch (e) {
+              alert('header请求头不符合json规范！');
+              return
+          }
+      }
 
 
         if (ts_body_method == 'none') {
@@ -482,6 +508,27 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
         var ts_header = document.getElementById('ts_header').value;
         var ts_body_method = $('ul#myTab li[class="active"]')[0].innerText;
 
+
+        // 判断顶部的数据是否填充完
+        if(ts_method == 'none'){alert('请选择请求方式！');return}
+        if(ts_url == ''){alert('请输入url！');return}
+        if(ts_host == ''){alert('请输入host！');return}
+
+
+        //判断关键数据是否符合规则
+        if(ts_host.slice(0,7) != 'http://' &&ts_host.slice(0,8)!='https://'){
+            alert('host必须以http://或https://开头！');return
+        }
+
+        //判断请求头是否为json格式
+            if(ts_header != ''){
+          try {
+              JSON.parse(ts_header)
+          }catch (e) {
+              alert('header请求头不符合json规范！');
+              return
+          }
+      }
 
         if (ts_body_method == 'none') {
             var ts_api_body = ''
