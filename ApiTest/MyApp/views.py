@@ -158,7 +158,7 @@ def save_project_set(request, id):
 # 新增接口
 def project_api_add(request, Pid):
     project_id = Pid
-    DB_apis.objects.create(project_id=project_id)
+    DB_apis.objects.create(project_id=project_id,api_method='none')
     return HttpResponseRedirect('/apis/%s/' % project_id)
 
 

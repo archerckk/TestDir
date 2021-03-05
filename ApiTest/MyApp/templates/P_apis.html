@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
-        .wqrf_button {
-            background: linear-gradient(to top, #daffff, white);
-            border-radius: 5px;
-            border: 1px solid #343c48;
-            box-shadow: 4px 4px 4px grey;
-        }
+        /*.wqrf_button {*/
+        /*    background: linear-gradient(to top, #daffff, white);*/
+        /*    border-radius: 5px;*/
+        /*    border: 1px solid #343c48;*/
+        /*    box-shadow: 4px 4px 4px grey;*/
+        /*}*/
     </style>
 
 </head>
@@ -45,7 +45,7 @@
         <th>id</th>
         <th style="width: 40%">接口名称</th>
         <th style="width: 20%">url</th>
-        <th style="width: 350px">操作</th>
+        <th style="width: 400px">操作</th>
     </tr>
     </thead>
     <tbody>
@@ -56,9 +56,9 @@
         <td>{{ i.api_url }}</td>
         <td>
             <button onclick="ts_show('{{i.id}}','{{i.name}}')" class="btn btn-success">调试</button>
-            <button onclick="open_bz('{{ i.id }}')" class="wqrf_button">备注</button>
-            <button class="wqrf_button">复制</button>
-            <button class="wqrf_button">异常值侧测试</button>
+            <button onclick="open_bz('{{ i.id }}')" class="btn btn-default">备注</button>
+            <button class="btn btn-default">复制</button>
+            <button class="btn btn-default">异常值侧测试</button>
             <button onclick="document.location.href='/project_api_del/{{ i.id }}/'" class="btn btn-danger">删除
             </button>
         </td>
@@ -127,15 +127,15 @@
 </script>
 
 
-{#请求体的弹窗div#}
-<div id="ts" style=" display:none;border-radius:5px;width:80%;position: fixed;left: 10%;top: 10%;background-color: #3c4043;
+{# 请求体的弹窗div #}
+<div id="ts" style=" display:none;border-radius:5px;width:80%;position: absolute;left: 10%;top: 10%;background-color: #3c4043;
 box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
     <div class="btn-group" style="float:right">
         <button onclick="ts_save()" type="button" class="btn btn-success">保存</button>
         <button onclick="ts_close()" type="button" class="btn btn-default">取消</button>
     </div>
     <h4>接口：<small id="ts_api_id" style="color: greenyellow"></small>-
-        <input id="ts_api_name" style="color: #329104"></h4>
+        <input id="ts_api_name" style="color: #329104" placeholder="请在此输入接口名称"></h4>
 
     <ul class="nav navbar-nav" style="width: 98%">
 
@@ -389,7 +389,7 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
 
 
     function ts_close() {
-        document.getElementById('ts').style.display = 'none';
+        document.location.reload()
     }
 
     function ts_save() {
