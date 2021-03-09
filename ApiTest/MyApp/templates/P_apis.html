@@ -687,7 +687,14 @@ color: white;padding-left: 10px;">
                     var new_body = []; //我们不能在s本尊上来回替换，所以弄了个替身，这个替身每次新的参数循环，都会重新被赋值原始s
                     $.extend(true,new_body, s);
                     new_body[i][1] = r[j];
-                    console.log(new_body)
+                    console.log(new_body);
+
+                    $.get('/error_request/',{
+                        'api_id':api_id,
+                        'new_body':new_body,
+                    },function (ret) {
+
+                    })
                 }
             }
         }else{
@@ -704,7 +711,14 @@ color: white;padding-left: 10px;">
                     var new_body = {};
                     $.extend(true,new_body, s);
                     new_body[i] = r[j];
-                    console.log(new_body)
+                    console.log(new_body);
+
+                   $.get('/error_request/',{
+                        'api_id':api_id,
+                        'new_body':JSON.stringify(new_body),
+                    },function (ret) {
+
+                    })
                 }
             }
         }catch (e) {

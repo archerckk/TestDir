@@ -45,5 +45,6 @@ urlpatterns = [
     url(r"^get_api_data/$",get_api_data), #获取api数据
     url(r"^Api_send/$",Api_send), #发送接口请求
     url(r"^copy_api/$",copy_api), #复制接口
+    url(r"^error_request/$",error_request), # 调用异常测试接口
 
 ]
