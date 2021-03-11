@@ -492,23 +492,23 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
 
         }
         if (ts_body_method == 'Text') {
-            document.getElementById('raw_Text').value;
+          var ts_api_body =  document.getElementById('raw_Text').value;
 
         }
         if (ts_body_method == 'Javascript') {
-            document.getElementById('raw_Javascript').value;
+          var ts_api_body =  document.getElementById('raw_Javascript').value;
 
         }
         if (ts_body_method == 'Json') {
-            document.getElementById('raw_Json').value;
+          var ts_api_body =  document.getElementById('raw_Json').value;
 
         }
         if (ts_body_method == 'Html') {
-            document.getElementById('raw_Html').value;
+           var ts_api_body = document.getElementById('raw_Html').value;
 
         }
         if (ts_body_method == 'Xml') {
-            document.getElementById('raw_Xml').value;
+           var ts_api_body = document.getElementById('raw_Xml').value;
 
         }
         var api_id = document.getElementById('ts_api_id').innerText;//获取接口的id
@@ -604,19 +604,19 @@ box-shadow: 4px 4px 9px grey;color: white;padding-left: 10px">
 
         }
         if (ts_body_method == 'Text') {
-            document.getElementById('raw_Text').value;
+            var ts_api_body = document.getElementById('raw_Text').value;
         }
         if (ts_body_method == 'Javascript') {
-            document.getElementById('raw_Javascript').value;
+            var ts_api_body = document.getElementById('raw_Javascript').value;
         }
         if (ts_body_method == 'Json') {
-            document.getElementById('raw_Json').value;
+            var ts_api_body = document.getElementById('raw_Json').value;
         }
         if (ts_body_method == 'Html') {
-            document.getElementById('raw_Html').value;
+            var ts_api_body = document.getElementById('raw_Html').value;
         }
         if (ts_body_method == 'Xml') {
-            document.getElementById('raw_Xml').value;
+            var ts_api_body = document.getElementById('raw_Xml').value;
         }
         var api_id = document.getElementById('ts_api_id').innerText;//获取接口的id
 
@@ -696,8 +696,22 @@ color: white;padding-left: 10px;">
             '    value="\'a\',123,\'\',\' \',\'./?*&^\',\'中文\'"\n' +
             '    > <br><br>'
     }
+     function error_show_response(span_text,ret) {
+        var error_div = document.getElementById('error_div'); // 声明这个请求体展示窗口
+        var s = document.createElement('span'); //创造替换标题
+        s.innerText = span_text;
+
+        var t = document.createElement('textarea'); //传教替换内容多行文本
+        t.style = 'width: 99%;height: 50px;border-radius: 5px;color: black;margin-bottom: 10px';
+        t.value = ret;
+
+        error_div.appendChild(s);
+        error_div.appendChild(t);
+    }
+
 
     function error_play() {
+        api_id = document.getElementById('error_api_name').innerText;
         api_body = document.getElementById('error_api_body').value;
         ready_error_data = document.getElementById('ready_error_data').value;
         //把预替换数据从一个大字符串，按逗号解析成数组。
@@ -711,14 +725,18 @@ color: white;padding-left: 10px;">
                     for (var j = 0; j < r.length; j++) {
                         var new_body = []; //我们不能在s本尊上来回替换，所以弄了个替身，这个替身每次新的参数循环，都会重新被赋值原始s
                         $.extend(true, new_body, s);
-                        new_body[i][1] = r[j];
+                        new_body[i][1] = eval(r[j]);
                         console.log(new_body);
+
+                        var span_text="替换： " +new_body[i][0]+'-->'+r[j]
 
                         $.get('/error_request/', {
                             'api_id': api_id,
-                            'new_body': JSON.stringify(new_body)
+                            'new_body': JSON.stringify(new_body),
+                            'span_text':span_text
                         }, function (ret) {
-
+                            res= eval(ret)
+                            error_show_response(res.span_text,res.response)
                         });
                     }
                 }
@@ -738,17 +756,22 @@ color: white;padding-left: 10px;">
                         new_body[i] = r[j];
                         console.log(new_body);
 
+                        var span_text="替换： " +i+'-->'+r[j]
+
+
                         $.get('/error_request/', {
                             'api_id': api_id,
-                            'new_body': JSON.stringify(new_body)
-                        }, function (ret) {
+                            'new_body': JSON.stringify(new_body),
+                            'span_text':span_text
 
+                        }, function (ret) {
+                            error_show_response(res.span_text,res.response)
                         });
                     }
                 }
             } catch (e) {
                 //若也不是，那就不需要做异常值测试了
-                alert('当前接口的请求体类型不支持异常值测试！'+e)
+                alert('当前接口的请求体类型不支持异常值测试！' + e)
             }
         }
     }
