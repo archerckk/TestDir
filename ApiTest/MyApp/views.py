@@ -281,59 +281,66 @@ def Api_send(request):
     # ts_api_body = request.GET['ts_api_body']
 
     # 发送请求获取返回值
-    header= json.loads(ts_header) # 处理header
+    try:
+        header= json.loads(ts_header) # 处理header
+    except:
+        return HttpResponse('请求头不符合json格式')
 
+    try:
     # 拼接完整url
-    if ts_host[-1]=='/' and ts_url[0]=='/': #都有/
-        url=ts_host[:-1]+ts_url
-    elif ts_host[-1] !='/' and ts_url[0] !='/': # 都没有/
-        url=ts_host+'/'+ts_url
-    else: # 肯定有一个有/
-        url=ts_host+ts_url
-    if ts_body_method== 'none':
-        response=requests.request(ts_body_method.upper(),url,headers=header,data={})
+        if ts_host[-1]=='/' and ts_url[0]=='/': #都有/
+            url=ts_host[:-1]+ts_url
+        elif ts_host[-1] !='/' and ts_url[0] !='/': # 都没有/
+            url=ts_host+'/'+ts_url
+        else: # 肯定有一个有/
+            url=ts_host+ts_url
+        if ts_body_method== 'none':
+            response=requests.request(ts_body_method.upper(),url,headers=header,data={})
 
-    elif ts_body_method=='form-data':
-        files=[]
-        payload={}
+        elif ts_body_method=='form-data':
+            files=[]
+            payload={}
 
-        for i in eval(ts_api_body):
-            payload[i[0]]=i[1]
+            for i in eval(ts_api_body):
+                payload[i[0]]=i[1]
 
-        response= requests.request(ts_body_method.upper(),url,headers=header,files=files)
-
-
-    elif ts_body_method=='x-www-form-urlencoded':
-        header['Content-Type']='application/x-www-form-urlencoded'
-        payload = {}
-
-        for i in eval(ts_api_body):
-            payload[i[0]] = i[1]
-
-        response = requests.request(ts_body_method.upper(), url, headers=header, data=payload)
-
-    else:
-        if ts_body_method=='Text':
-            header['Content-Type'] = 'text/plain'
-
-        if ts_body_method=='JavaScript':
-            header['Content-Type'] = 'text/plain'
-
-        if ts_body_method == 'Json':
-            header['Content-Type'] = 'text/plain'
-
-        if ts_body_method == 'Html':
-            header['Content-Type'] = 'text/plain'
-
-        if ts_body_method == 'Xml':
-            header['Content-Type'] = 'text/plain'
-
-        response=requests.request(ts_body_method.upper(),url,headers=header,data=ts_api_body.encode('utf-8'))
+            response= requests.request(ts_body_method.upper(),url,headers=header,files=files)
 
 
-    response.encoding='utf-8'
-    # 把返回值传递给前端页面
-    return HttpResponse(response.text)
+        elif ts_body_method=='x-www-form-urlencoded':
+            header['Content-Type']='application/x-www-form-urlencoded'
+            payload = {}
+
+            for i in eval(ts_api_body):
+                payload[i[0]] = i[1]
+
+            response = requests.request(ts_body_method.upper(), url, headers=header, data=payload)
+
+        else:
+            if ts_body_method=='Text':
+                header['Content-Type'] = 'text/plain'
+
+            if ts_body_method=='JavaScript':
+                header['Content-Type'] = 'text/plain'
+
+            if ts_body_method == 'Json':
+                header['Content-Type'] = 'text/plain'
+
+            if ts_body_method == 'Html':
+                header['Content-Type'] = 'text/plain'
+
+            if ts_body_method == 'Xml':
+                header['Content-Type'] = 'text/plain'
+
+            response=requests.request(ts_body_method.upper(),url,headers=header,data=ts_api_body.encode('utf-8'))
+
+
+        response.encoding='utf-8'
+        # 把返回值传递给前端页面
+        return HttpResponse(response.text)
+
+    except Exception as e:
+        return HttpResponse(str(e))
 
 # 异常值发送请求
 def error_request(request):
@@ -348,7 +355,11 @@ def error_request(request):
     host = api.api_host
     header = api.api_header
     body_method = api.body_method
-    header = json.loads(header)
+
+    try:
+        header = json.loads(header)  # 处理header
+    except:
+        return HttpResponse('请求头不符合json格式')
 
     # url处理逻辑
     if host[-1] == '/' and url[0] == '/':  # 都有/
