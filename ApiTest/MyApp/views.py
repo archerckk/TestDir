@@ -21,7 +21,9 @@ def child_json(eid, oid=''):
         date = DB_home_href.objects.all()
         # projects=DB_project.objects.all()
         # res = {'hrefs': date,'projects':projects}
-        res = {'hrefs': date}
+        home_log=DB_apis_log.objects.filter(user_id=oid)
+        res = {'hrefs': date,"home_log":home_log}
+
     elif eid == 'project_list.html':
         date = DB_project.objects.all()
         res = {'hrefs': date, 'projects': date}
@@ -50,7 +52,7 @@ def child(request, eid, oid):
 
 @login_required
 def home(request):
-    return render(request, "welcome.html", {"whichHTML": "home.html", "oid": ""})
+    return render(request, "welcome.html", {"whichHTML": "home.html", "oid": request.user.id})
 
 
 def login(request):
