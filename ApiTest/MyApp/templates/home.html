@@ -8,11 +8,13 @@
 </head>
 <body style="text-align: center">
 
-<h3>&#12288;您的请求记录：</h3>
-<div id="home_log_plan" style="padding-left: 20px;overflow-y: auto;width: 250px">
 
-<!--    <H3>AAAAAA</H3>-->
+<h2 style="margin-left: 450px;color:#03c9fb">欢迎使用 接口测试平台</h2>
+<h3>&#12288;您的请求记录：</h3>
+<div id="home_log_plan" style="padding-left: 20px;overflow-y: auto;width: 350px">
+
     {% for i in home_log %}
+
     <a href="javascript:home_log_show('{{ i.id }}')" style="text-decoration: none"  class="log" >
         <span style="font-size: large;color: black">{{ i.api_method }}</span> -
         {{ i.api_host }}{{ i.api_url }}
@@ -20,14 +22,14 @@
     {% endfor %}
 </div>
 
-<div id="shu" style="width: 2px;background-color: #262c2c;position: absolute;top:70px;left: 250px">
+<div id="shu" style="width: 2px;background-color: #262c2c;position: absolute;top:70px;left: 350px">
 &nbsp
 </div>
 
 
 
 
-<div style="position: absolute;top:100px;left: 300px;width: -webkit-calc(100%- 420px);">
+<div style="position: absolute;top:100px;left: 450px;width: -webkit-calc(100%- 520px);">
   {# 调试弹层及函数 #}
         <ul class="nav navbar-nav" style="width: 98%">
             <li>
@@ -248,16 +250,50 @@
                 document.getElementById('ts_response_body').value = ret ;//把返回值显示到返回值多行文本框中
             })
         }
+        //左侧记录刷新
         function log_refresh() {
         //清空
-            div=document.getElementById('home_log_plan');
-            div.innerHTML='';
-            //
-            $.get('/get_home_log/',{},function (ret) {//ret 应该是我们获取到的记录列表数组的字符串形式
-                //这里写生成展示的代码
-                console.log(ret)
-            })
+    div = document.getElementById('home_log_plan');
+    div.innerHTML = '';
+    // 生成新的
+    $.get('/get_home_log/',{
+    },function (ret) { //ret 应该就是我们获取到的记录列表数组 的字符串形式
+        // 这里写生成展示的代码
+        console.log(ret);
+        var res = eval(ret);
+        var all_logs = res.all_logs;
+        for(var i=0; i<all_logs.length;i++) {
+            var a = document.createElement('a');//创建a标签
+            a.href = "javascript:home_log_show("+all_logs[i].id.toString()+")"; // 点击函数
+            a.style = "text-decoration: none";
+            a.class = 'log';
+            var s = document.createElement('span'); //声明显示请求体类型的span
+            s.style = "font-size: large;color: black";
+            s.innerText = all_logs[i].api_method + ' - '; //设定这个method;
+            var s2 = document.createElement('span'); // 声明存放host+url的span
+            s2.innerText = all_logs[i].api_host + all_logs[i].api_url;
+            a.appendChild(s);
+            a.appendChild(s2);
+            div.appendChild(a);
+            div.appendChild(document.createElement('br'));
+        }})
         }
+
+        //左侧记录点击后
+            function home_log_show(id) {
+
+                $.get("/get_api_log_home/",{
+                    "log_id":id
+                },function (ret) {
+                    console.log(ret);
+                    //改变右侧的请求模块
+                    res=eval(ret);//res成为了一个字典
+                    log=res.log;//log获取了这个字典中的log，也就是目标记录的完整请求数据
+                    //解析来开始往右侧塞
+
+                })
+
+            }
         </script>
 </div>
 

@@ -480,5 +480,14 @@ def Api_send_home(request):
 def get_home_log(request):
     user_id=request.user.id
     all_logs=DB_apis_log.objects.filter(user_id=user_id)
-    ret={"all_logs":list(all_logs.values("id","api_method","api_host","api_url"))[::-1]}
+    ret={"all_logs":list(all_logs.values("id","api_method","api_host","api_url"))[::-1] }
+    return HttpResponse(json.dumps(ret),content_type='application/json')
+
+
+
+def get_api_log_home(request):
+    log_id=request.GET['log_id']
+    log=DB_apis_log.objects.filter(id=log_id)
+    ret={"log":list(log.values())[0]}
+    print(ret)
     return HttpResponse(json.dumps(ret),content_type='application/json')

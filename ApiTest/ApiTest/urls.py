@@ -48,5 +48,6 @@ urlpatterns = [
     url(r"^error_request/$",error_request), # 调用异常测试接口
     url(r"^Api_send_home/$",Api_send_home), # 主页发送请求
     url(r"^get_home_log/$",get_home_log), # 获取最新请求记录
+    url(r"^get_api_log_home/$",get_api_log_home), # 获取完整的单一的请求记录数据
 
 ]
