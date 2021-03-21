@@ -10,11 +10,13 @@
 
 <h3>&#12288;您的请求记录：</h3>
 <div id="home_log_plan" style="padding-left: 20px;overflow-y: auto;width: 250px">
+
+<!--    <H3>AAAAAA</H3>-->
     {% for i in home_log %}
-        <a href="javascript:home_log_show('{{ i.id }}')" style="text-decoration: none"  class="log" >
-            <span style="font-size: large;color: black">{{ i.api_method }}</span> -
-            {{ i.api_host }}{{ i.api_url }}
-        </a> <br>
+    <a href="javascript:home_log_show('{{ i.id }}')" style="text-decoration: none"  class="log" >
+        <span style="font-size: large;color: black">{{ i.api_method }}</span> -
+        {{ i.api_host }}{{ i.api_url }}
+    </a> <br>
     {% endfor %}
 </div>
 
@@ -241,21 +243,21 @@
                 'ts_body_method':ts_body_method,
                 'ts_api_body':ts_api_body
             },function (ret) {
+                 log_refresh();
                 $("li a[href=#response]").click(); //点击一下返回体按钮
                 document.getElementById('ts_response_body').value = ret ;//把返回值显示到返回值多行文本框中
             })
         }
-        // log_refresh()
-        // function log_refresh() {
-        // //清空
-        //     div=document.getElementById('home_log_plan');
-        //     div.innerHTML='';
-        //     //
-        //     $.get('/get_home_log/',{},function (ret) {//ret 应该是我们获取到的记录列表数组的字符串形式
-        //         //这里写生成展示的代码
-        //         console.log(ret)
-        //     })
-        // }
+        function log_refresh() {
+        //清空
+            div=document.getElementById('home_log_plan');
+            div.innerHTML='';
+            //
+            $.get('/get_home_log/',{},function (ret) {//ret 应该是我们获取到的记录列表数组的字符串形式
+                //这里写生成展示的代码
+                console.log(ret)
+            })
+        }
         </script>
 </div>
 

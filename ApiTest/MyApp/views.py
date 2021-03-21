@@ -21,7 +21,7 @@ def child_json(eid, oid=''):
         date = DB_home_href.objects.all()
         # projects=DB_project.objects.all()
         # res = {'hrefs': date,'projects':projects}
-        home_log=DB_apis_log.objects.filter(user_id=oid)
+        home_log=DB_apis_log.objects.filter(user_id=oid)[::-1]
         res = {'hrefs': date,"home_log":home_log}
 
     elif eid == 'project_list.html':
@@ -415,6 +415,19 @@ def Api_send_home(request):
         header = json.loads(ts_header)  # 处理header
     except:
         return HttpResponse('请求头不符合json格式！')
+
+    # 写入到数据库请求记录表中
+    DB_apis_log.objects.create(
+        user_id=request.user.id,
+        api_method=ts_method,
+        api_url=ts_url,
+        api_header=ts_header,
+        api_host=ts_host,
+        body_method=ts_body_method,
+        api_body=ts_api_body,
+    )
+
+
     # 拼接完整url
     if ts_host[-1] == '/' and ts_url[0] == '/':  # 都有/
         url = ts_host[:-1] + ts_url
@@ -467,5 +480,5 @@ def Api_send_home(request):
 def get_home_log(request):
     user_id=request.user.id
     all_logs=DB_apis_log.objects.filter(user_id=user_id)
-    ret={"all_logs":list(all_logs.values("id","api_method","api_host","api_url"))}
+    ret={"all_logs":list(all_logs.values("id","api_method","api_host","api_url"))[::-1]}
     return HttpResponse(json.dumps(ret),content_type='application/json')
