@@ -15,14 +15,18 @@ def welcome(request):
 
 
 # 控制不同页面返回不同的数据：数据分发器
-def child_json(eid, oid=''):
+def child_json(eid, oid='',ooid=''):
     res = {}
     if eid == 'home.html':
         date = DB_home_href.objects.all()
         # projects=DB_project.objects.all()
         # res = {'hrefs': date,'projects':projects}
         home_log=DB_apis_log.objects.filter(user_id=oid)[::-1]
-        res = {'hrefs': date,"home_log":home_log}
+        if ooid =='':
+            res = {'hrefs': date,"home_log":home_log}
+        else:
+            log =DB_apis_log.objects.filter(id=ooid)[0]
+            res={"hrefs":date,"home_log":home_log,"log":log}
 
     elif eid == 'project_list.html':
         date = DB_project.objects.all()
@@ -45,14 +49,14 @@ def child_json(eid, oid=''):
 
 
 # 返回子页面
-def child(request, eid, oid):
-    res = child_json(eid, oid)
+def child(request, eid, oid,ooid):
+    res = child_json(eid, oid,ooid)
     return render(request, eid, res)
 
 
 @login_required
-def home(request):
-    return render(request, "welcome.html", {"whichHTML": "home.html", "oid": request.user.id})
+def home(request,log_id=''):
+    return render(request, "welcome.html", {"whichHTML": "home.html", "oid": request.user.id,"ooid":log_id})
 
 
 def login(request):

@@ -23,7 +23,7 @@ urlpatterns = [
     url(r"^welcome/$", welcome),#获取菜单
     url(r"^home/$", home),#进入主页
     url(r"^login/$", login),#进入登录页
-    url(r"^child/(?P<eid>.+)/(?P<oid>.*)/$",child),#加载子页面
+    url(r"^child/(?P<eid>.+)/(?P<oid>.*)/(?P<ooid>.*)/$",child),#加载子页面
     url(r"^login_action/$",login_action),#登录
     url(r"^register_action/$",register_action),#注册
     url(r"^accounts/login/$",login),#未登录跳转注册
@@ -49,5 +49,6 @@ urlpatterns = [
     url(r"^Api_send_home/$",Api_send_home), # 主页发送请求
     url(r"^get_home_log/$",get_home_log), # 获取最新请求记录
     url(r"^get_api_log_home/$",get_api_log_home), # 获取完整的单一的请求记录数据
+    url(r"^home_log/(?P<log_id>.*)/$",home), # 再次进入首页，这次要带着请求记录
 
 ]

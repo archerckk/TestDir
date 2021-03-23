@@ -15,7 +15,7 @@
 
     {% for i in home_log %}
 
-    <a href="javascript:home_log_show('{{ i.id }}')" style="text-decoration: none"  class="log" >
+    <a href="/home_log/{{ i.id }}" style="text-decoration: none"  class="log" >
         <span style="font-size: large;color: black">{{ i.api_method }}</span> -
         {{ i.api_host }}{{ i.api_url }}
     </a> <br>
@@ -43,7 +43,7 @@
             </li>
 
             <li style="width: -webkit-calc(100% - 225px)">
-                <input id="ts_url" style="color: black;padding-left: 10px;width: 100%;height: 40px;" type="text" placeholder='url: 如 /abcd/efgh/' value="">
+                <input id="ts_url" style="color: black;padding-left: 10px;width: 100%;height: 40px;" type="text" placeholder='url: 如 /abcd/efgh/' value="{{log.api_url}}">
             </li>
 
             <li >
@@ -55,7 +55,7 @@
         <br><br><br>
         <ul class="nav navbar-nav" style="width: 98%">
             <li style=" width: -webkit-calc(100% - 63px)">
-                 <input id="ts_host"  style="color: black;padding-left: 10px;width: 100%;height: 40px;" type="text" placeholder='host: 如http(s)://xxxx.ccc.com' value="">
+                 <input id="ts_host"  style="color: black;padding-left: 10px;width: 100%;height: 40px;" type="text" placeholder='host: 如http(s)://xxxx.ccc.com' value="{{log.api_host}}">
             </li>
              <li >
                 <button type="button"
@@ -67,7 +67,7 @@
         <ul class="nav navbar-nav" style="width: 98%">
             <li style="width:  -webkit-calc(100% - 63px)">
                  <input id="ts_header"  style="color: black;padding-left: 10px;width: 100%;height: 40px;" type="text"
-                       placeholder='header请求头：如{"Content":"application/json"}' value="">
+                       placeholder='header请求头：如{"Content":"application/json"}' value="{{log.api_header}}">
             </li>
              <li >
                 <button type="button"
@@ -264,7 +264,7 @@
         var all_logs = res.all_logs;
         for(var i=0; i<all_logs.length;i++) {
             var a = document.createElement('a');//创建a标签
-            a.href = "javascript:home_log_show("+all_logs[i].id.toString()+")"; // 点击函数
+            a.href = "/home_log/"+all_logs[i].id+"/"; // 点击函数
             a.style = "text-decoration: none";
             a.class = 'log';
             var s = document.createElement('span'); //声明显示请求体类型的span
