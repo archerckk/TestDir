@@ -161,6 +161,71 @@
         <br>
 
         <script>
+           // 自动设置请求类型
+    if( "{{ log.api_method }}" != ''){
+        document.getElementById('ts_method').value = "{{ log.api_method }}";
+    }
+    //请求体类型 //请求体
+    if("{{ log.body_method }}" != ''){
+        console.log("{{ log.body_method }}");
+        console.log("{{ log.api_body }}");
+
+        var body_method = '#'+"{{ log.body_method }}";
+        $("li a[href="+body_method+"]").click();
+
+        if("{{ log.body_method }}" == 'Text'){
+            document.getElementById('raw_Text').value = "{{ log.api_body }}";
+        }
+        if("{{ log.body_method }}" == 'JavaScript'){
+            document.getElementById('raw_JavaScript').value = "{{ log.api_body }}";
+        }
+        if("{{ log.body_method }}" == 'Json'){
+            document.getElementById('raw_Json').value = "{{ log.api_body }}";
+        }
+        if("{{ log.body_method }}" == 'Html'){
+            document.getElementById('raw_Html').value = "{{ log.api_body }}";
+        }
+        if("{{ log.body_method }}" == 'Xml'){
+            document.getElementById('raw_Xml').value = "{{ log.api_body }}";
+        }
+        if("{{ log.body_method }}" == 'form-data'){
+            var tbody = document.getElementById('mytbody'); // 定位表格中的tbody部分
+            body = eval("{{ log.api_body }}".replace(new  RegExp('&quot;',"gm"),'"')); //把这个像列表的字符串请求体变成真正的列表
+            for(var i=0;i<body.length;i++){ // 遍历这个请求体列表
+                key = body[i][0]; //拿出每一个键值对的key
+                value = body[i][1];//拿出每一个键值对的value
+                var childs_tr = tbody.children ;//获取到这个表格下面所有的tr组成的大列表
+                // 每个tr下的children得到的是 td列表，只有俩个。
+                childs_tr[i].children[0].innerText = key; //第一个td放key
+                childs_tr[i].children[1].innerText = value;//第二个td放value
+                //判断是否是最后一次遍历，来决定是否点击新增参数按钮
+                if(i<body.length-1){
+                    document.getElementById('add').click()
+                }
+            }
+        }
+        if("{{ log.body_method }}" == 'x-www-form-urlencoded'){
+            var tbody = document.getElementById('mytbody2'); // 定位表格中的tbody部分
+            body = eval("{{ log.api_body }}").replace(new  RegExp('&quot;',"gm"),'"'); //把这个像列表的字符串请求体变成真正的列表
+            for(var i=0;i<body.length;i++){ // 遍历这个请求体列表
+                key = body[i][0]; //拿出每一个键值对的key
+                value = body[i][1];//拿出每一个键值对的value
+                var childs_tr = tbody.children ;//获取到这个表格下面所有的tr组成的大列表
+                // 每个tr下的children得到的是 td列表，只有俩个。
+                childs_tr[i].children[0].innerText = key; //第一个td放key
+                childs_tr[i].children[1].innerText = value;//第二个td放value
+                //判断是否是最后一次遍历，来决定是否点击新增参数按钮
+                if(i<body.length-1){
+                    document.getElementById('add2').click()
+                }
+            }
+        }
+    }
+    </script>
+
+
+
+        <script>
                // 运行第三方表格插件的函数
         $('#mytable').SetEditable({
             $addButton: $('#add'),
